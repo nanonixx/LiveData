@@ -9,30 +9,27 @@ import java.util.concurrent.ScheduledFuture;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class Entrenador {
+public class Pokemon {
 
     interface EntrenadorListener {
-        void cuandoDeLaOrden(String orden);
+        void cuandoEvolucione(String orden);
     }
 
-    Random random = new Random();
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     ScheduledFuture<?> entrenando;
 
-    void iniciarEntrenamiento(final EntrenadorListener entrenadorListener) {
+    void iniciarEvolucion(final EntrenadorListener entrenadorListener) {
         if (entrenando == null || entrenando.isCancelled()) {
             entrenando = scheduler.scheduleAtFixedRate(new Runnable() {
-                int ejercicio;
-                int repeticiones = -1;
+                int evo;
 
                 @Override
                 public void run() {
-                    if (repeticiones < 0) {
-                        repeticiones = random.nextInt(3) + 3;
-                        ejercicio = random.nextInt(5)+1;
-                    }
-                    entrenadorListener.cuandoDeLaOrden("EJERCICIO" + ejercicio + ":" + (repeticiones == 0 ? "CAMBIO" : repeticiones));
-                    repeticiones--;
+
+                        evo++;
+                        if (evo==5) evo=1;
+
+                    entrenadorListener.cuandoEvolucione("EV" + evo);
                 }
             }, 0, 1, SECONDS);
         }
@@ -45,15 +42,15 @@ public class Entrenador {
 
 
     }
-    LiveData<String> ordenLiveData = new LiveData<String>() {
+    LiveData<String> evolucionLiveData = new LiveData<String>() {
         @Override
         protected void onActive() {
             super.onActive();
 
-            iniciarEntrenamiento(new EntrenadorListener() {
+            iniciarEvolucion(new EntrenadorListener() {
                 @Override
-                public void cuandoDeLaOrden(String orden) {
-                    postValue(orden);
+                public void cuandoEvolucione(String evolucion) {
+                    postValue(evolucion);
                 }
             });
         }
@@ -66,3 +63,17 @@ public class Entrenador {
         }
     };
 }
+
+
+/*
+E1:3
+E1:2
+E1:1
+
+
+EV1
+EV2
+EV3
+
+
+ */

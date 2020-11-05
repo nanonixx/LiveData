@@ -24,7 +24,7 @@
         android:background="#ddee44"
         android:textColor="#FFFFFF"
         android:visibility="gone"
-        android:text="CAMBIO"
+        android:text="EVOLUCIONA"
         android:gravity="center"
         android:textSize="48sp"/>
 </FrameLayout>

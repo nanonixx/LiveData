@@ -10,63 +10,41 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 public class EntrenadorViewModel extends AndroidViewModel {
-    Entrenador entrenador;
+    Pokemon pokemon;
 
-    LiveData<Integer> ejercicioLiveData;
-    LiveData<String> repeticionLiveData;
+    LiveData<Integer> imagenLiveData;
 
     public EntrenadorViewModel(@NonNull Application application) {
         super(application);
 
-        entrenador = new Entrenador();
+        pokemon = new Pokemon();
 
-        ejercicioLiveData = Transformations.switchMap(entrenador.ordenLiveData, new Function<String, LiveData<Integer>>() {
-
-            String ejercicioAnterior;
-
+        imagenLiveData = Transformations.switchMap(pokemon.evolucionLiveData, new Function<String, LiveData<Integer>>() {
             @Override
-            public LiveData<Integer> apply(String orden) {
-
-                String ejercicio = orden.split(":")[0];
-
-                if(!ejercicio.equals(ejercicioAnterior)){
-                    ejercicioAnterior = ejercicio;
+            public LiveData<Integer> apply(String evolucion) {
                     int imagen;
-                    switch (ejercicio) {
-                        case "EJERCICIO1":
+                    switch (evolucion) {
+                        case "EV1":
                         default:
-                            imagen = R.drawable.e1;
+                            imagen = R.drawable.squirtle;
                             break;
-                        case "EJERCICIO2":
-                            imagen = R.drawable.e2;
+                        case "EV2":
+                            imagen = R.drawable.wartortle;
                             break;
-                        case "EJERCICIO3":
-                            imagen = R.drawable.e3;
+                        case "EV3":
+                            imagen = R.drawable.blastoise;
                             break;
-                        case "EJERCICIO4":
-                            imagen = R.drawable.e4;
+                        case "EV4":
+                            imagen = R.drawable.mega;
                             break;
                     }
 
                     return new MutableLiveData<>(imagen);
-                }
-                return null;
-            }
-        });
-
-        repeticionLiveData = Transformations.switchMap(entrenador.ordenLiveData, new Function<String, LiveData<String>>() {
-            @Override
-            public LiveData<String> apply(String orden) {
-                return new MutableLiveData<>(orden.split(":")[1]);
             }
         });
     }
 
-    LiveData<Integer> obtenerEjercicio(){
-        return ejercicioLiveData;
-    }
-
-    LiveData<String> obtenerRepeticion(){
-        return repeticionLiveData;
+    public LiveData<Integer> obtenerImagen(){
+        return imagenLiveData;
     }
 }
